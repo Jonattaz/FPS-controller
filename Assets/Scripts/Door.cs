@@ -6,14 +6,14 @@ public class Door : Interactable
 {
     private bool isOpen = false;
     private bool canBeInteractedWith = true;
-    private Animator anim;
+    //private Animator anim;
 
     private void Start(){
-        anim =GetComponent<Animator>();
+      // anim =GetComponent<Animator>();
     }
     public override void OnFocus()
     {
-        throw new System.NotImplementedException();
+        print("Looking at " + gameObject.name);
     }
 
     public override void OnInteract()
@@ -23,14 +23,17 @@ public class Door : Interactable
           Vector3 doorTransformDirection = transform.TransformDirection(Vector3.forward);
           Vector3 playerTransformDirection = FirstPersonController.instance.transform.position - transform.position;
           float dot = Vector3.Dot(doorTransformDirection, playerTransformDirection);
-          anim.SetFloat("dot", dot);
-          anim.SetBool("isOpen", isOpen);
+         
+         /* anim.SetFloat("dot", dot);
+          anim.SetBool("isOpen", isOpen); */
+          print("Abriu");
+          StartCoroutine(AutoClose());
       }
     }
 
     public override void OnLoseFocus()
     {
-        throw new System.NotImplementedException();
+      print("Stopped looking at " + gameObject.name);
     }
 
     private IEnumerator AutoClose(){
@@ -39,9 +42,12 @@ public class Door : Interactable
 
             if(Vector3.Distance(transform.position, FirstPersonController.instance.transform.position) > 3){
                 isOpen = false;
-                anim.SetFloat("dot", 0);
-                anim.SetBool("isOpen", isOpen);
+                /*anim.SetFloat("dot", 0);
+                anim.SetBool("isOpen", isOpen); */
+
+                print("Fechou");
             }
+            
         }
     }
 
