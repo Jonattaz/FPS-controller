@@ -27,6 +27,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private bool canInteract = true;
     [SerializeField] private bool useFootsteps = true;
     [SerializeField] private bool useStamina = true;
+    [SerializeField] public bool interacting = false;
 
     [Header("Controls")]
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
@@ -66,7 +67,7 @@ public class FirstPersonController : MonoBehaviour
     [SerializeField] private float staminaTimeIncrement = 0.1f;
     private float currentStamina;
     private Coroutine regeneratingStamina;
-    public static Action<float> OnStaminaChange;    
+    public static Action<float> OnStaminaChange;
 
     [Header("Jumping Parameters")]
     [SerializeField] private float gravity = 30.0f;
@@ -173,41 +174,43 @@ public class FirstPersonController : MonoBehaviour
     {
         if (CanMove)
         {
-            HandleMovementInput();
             HandleMouseLook();
-            if (canJump)
-            {
-                HandleJump();
-            }
-            if (canCrouch)
-            {
-                HandleCrouch();
-            }
-            if (canUseHeadbob)
-            {
-                HandleHeadbob();
-            }
+            HandleInteractionCheck();
 
-            if (canZoom)
+            if (!interacting)
             {
-                HandleZoom();
+                HandleMovementInput();
+                if (canJump)
+                {
+                    HandleJump();
+                }
+                if (canCrouch)
+                {
+                    HandleCrouch();
+                }
+                if (canUseHeadbob)
+                {
+                    HandleHeadbob();
+                }
+
+                if (canZoom)
+                {
+                    HandleZoom();
+                }
+
+                if (useFootsteps)
+                {
+                    HandleFootsteps();
+                }
+                if (canInteract)
+                {
+                    HandleInteractionInput();
+                }
+                if (useStamina)
+                    HandleStamina();
+
+                ApplyFinalMovement();
             }
-
-            if (useFootsteps)
-            {
-                HandleFootsteps();
-            }
-
-            if (canInteract)
-            {
-                HandleInteractionCheck();
-                HandleInteractionInput();
-            }
-
-            if (useStamina)
-                HandleStamina();
-
-            ApplyFinalMovement();
         }
     }
 
@@ -284,9 +287,10 @@ public class FirstPersonController : MonoBehaviour
             }
         }
 
-        if(!IsSprinting && currentStamina < maxStamina && regeneratingStamina == null){
+        if (!IsSprinting && currentStamina < maxStamina && regeneratingStamina == null)
+        {
             regeneratingStamina = StartCoroutine(RegenerateStamina());
-            
+
         }
     }
 
@@ -488,15 +492,16 @@ public class FirstPersonController : MonoBehaviour
 
         while (currentStamina < maxStamina)
         {
-            if(currentStamina > 0)
+            if (currentStamina > 0)
                 canSprint = true;
 
             currentStamina += staminaValueIncrement;
-    
-            if(currentStamina > maxStamina){
+
+            if (currentStamina > maxStamina)
+            {
                 currentStamina = maxHealth;
             }
-    
+
             OnStaminaChange?.Invoke(currentStamina);
             yield return timeToWait;
         }

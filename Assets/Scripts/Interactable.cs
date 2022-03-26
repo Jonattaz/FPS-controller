@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Interactable : MonoBehaviour
 {
     public virtual void Awake(){
+        // Número da layer que possui como nome Interactble 
         gameObject.layer = 6;
     }
 

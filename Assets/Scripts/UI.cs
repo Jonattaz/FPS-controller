@@ -39,10 +39,4 @@ public class UI : MonoBehaviour
     {
         staminaText.text = currentStamina.ToString("00");
     }
-
-
-
-
-
-
 }
