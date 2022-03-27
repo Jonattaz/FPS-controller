@@ -5,22 +5,24 @@ using UnityEngine.Events;
 
 public class InteractableObject : Interactable
 {
-    [Header ("Interaction Options")]
-    [SerializeField] private GameObject intergirText;    
-    [SerializeField] private Item item;
-    [SerializeField] private float rotateSpeed = 30f;  
-    [SerializeField] private bool interacting;   
-    
-     [Header("Configurations")]
-     [SerializeField] private Camera myCamera;
-     [SerializeField] private Transform objectViewer;
+    [Header("Interaction Options")]
+    [SerializeField] private float rotateSpeed = 30f;
+    [SerializeField] private bool interacting;
+
+    [Header("Configurations")]
+    [SerializeField] private Camera myCamera;
+    [SerializeField] private Transform objectViewer;
 
     private Vector3 originPosition;
     private Quaternion originRotation;
 
     private bool textController;
 
-    private void Start() {
+    private AudioPlayer audioPlayer;
+
+    private void Start()
+    {
+        audioPlayer = GetComponent<AudioPlayer>();
         textController = true;
         interacting = false;
         originPosition = transform.position;
@@ -29,47 +31,64 @@ public class InteractableObject : Interactable
 
     public override void OnFocus()
     {
-        if(textController){
+        if (textController)
+        {
             intergirText.SetActive(true);
             textController = false;
         }
-        if(interacting){
-           FirstPersonController.instance.interacting = true;
-           RotateObject(); 
-        }  
-            
+        if (interacting)
+        {
+            // Caso o jogo tenha audio/voz usar: Invoke("Interact", item.audioclip.length + 0.5f)
+            FirstPersonController.instance.interacting = true;
+            Invoke("Interact", 5f);
+            UI.instaceUI.SetCaptions(item.text);
+            //audioPlayer.PlayAudio(item.audioClip);
+            RotateObject();
+        }
+
     }
 
     public override void OnInteract()
     {
-        if(!textController)
+        if (!textController)
             intergirText.SetActive(false);
-            if(item.grabbable){
-                interacting = true;
-                StartCoroutine(MovingObject(this, objectViewer.position, transform.rotation));
-            }
+        if (item.grabbable)
+        {
+            interacting = true;
+            StartCoroutine(MovingObject(this, objectViewer.position, transform.rotation));
+        }
     }
 
     public override void OnLoseFocus()
     {
-        FirstPersonController.instance.interacting = false;
-        interacting = false;
-        intergirText.SetActive(false);
-        textController = true;
-        StartCoroutine(MovingObject(this, originPosition, originRotation));
-
+        if (!FirstPersonController.instance.interacting)
+        {
+            UI.instaceUI.SetCaptions("");
+            interacting = false;
+           intergirText.SetActive(false);
+            textController = true;
+            StartCoroutine(MovingObject(this, originPosition, originRotation));
+        }
     }
 
-    void RotateObject(){
+    private void Interact()
+    {
+        FirstPersonController.instance.interacting = false;
+    }
+
+    private void RotateObject()
+    {
         float x = Input.GetAxis("Mouse X") * rotateSpeed;
         float y = Input.GetAxis("Mouse Y") * rotateSpeed;
         transform.Rotate(myCamera.transform.right, -Mathf.Deg2Rad * y * rotateSpeed, Space.World);
         transform.Rotate(myCamera.transform.up, -Mathf.Deg2Rad * x * rotateSpeed, Space.World);
     }
 
-    IEnumerator MovingObject(InteractableObject obj, Vector3 position, Quaternion rotation){
+    IEnumerator MovingObject(InteractableObject obj, Vector3 position, Quaternion rotation)
+    {
         float timer = 0;
-        while(timer < 1){
+        while (timer < 1)
+        {
             obj.transform.position = Vector3.Lerp(obj.transform.position, position, Time.deltaTime * 6);
             timer += Time.deltaTime;
             yield return null;

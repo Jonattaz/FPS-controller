@@ -14,13 +14,14 @@ public class Door : Interactable
     }
     public override void OnFocus()
     {
-        //print("Looking at " + gameObject.name);
+        intergirText.SetActive(true);
     }
 
     public override void OnInteract()
     {
         if (canBeInteractedWith)
         {
+            intergirText.SetActive(false);
             isOpen = !isOpen;
             Vector3 doorTransformDirection = transform.TransformDirection(Vector3.forward);
             Vector3 playerTransformDirection = FirstPersonController.instance.transform.position - transform.position;
@@ -35,7 +36,7 @@ public class Door : Interactable
 
     public override void OnLoseFocus()
     {
-        //print("Stopped looking at " + gameObject.name);
+        intergirText.SetActive(false);
     }
 
     private IEnumerator AutoClose()
@@ -49,7 +50,6 @@ public class Door : Interactable
                 isOpen = false;
                 anim.SetFloat("dot", 0);
                 anim.SetBool("isOpen", isOpen);
-
             }
 
         }

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff7d8e94ba6d89c48bab304f399f27ad, type: 3}
-  m_Name: AllSpark
+  m_Name: Livro
   m_EditorClassIdentifier: 
   grabbable: 1
   audioClip: {fileID: 0}
-  text: 
+  text: Era este livro que estava procurando
