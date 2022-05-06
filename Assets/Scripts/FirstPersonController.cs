@@ -172,6 +172,21 @@ public class FirstPersonController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if(Input.GetMouseButtonUp(0)){
+            Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 100f));
+            Vector3 dir = worldMousePos - Camera.main.transform.position;
+
+            RaycastHit hit;
+
+            if(Physics.Raycast (Camera.main.transform.position, dir, out  hit, 100f)){
+                if(hit.collider.gameObject.tag == "ApenasAmigos"){
+                    Destroy(hit.collider.gameObject);
+                }
+                
+            }
+        }
+
         if (CanMove)
         {
             HandleMouseLook();
