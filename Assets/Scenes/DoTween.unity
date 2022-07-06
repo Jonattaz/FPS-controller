@@ -399,7 +399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 597332861}
   m_Layer: 0
-  m_Name: Teste 1
+  m_Name: DoTweenTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1890,7 +1890,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objeto: {fileID: 742633785}
-  timeChecker: 10
 --- !u!1 &2064340080
 GameObject:
   m_ObjectHideFlags: 0
