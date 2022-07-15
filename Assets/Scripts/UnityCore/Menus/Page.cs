@@ -18,6 +18,17 @@ namespace UnityCore{
 
             private Animator m_Animator;
 
+            private bool m_IsOn;
+
+            public bool isOn{
+                get{
+                    return m_IsOn;
+                }
+                private set{
+                    m_IsOn = value;
+                }
+            }
+
             [SerializeField]private bool debug;
 
             #region Unity Functions
@@ -36,6 +47,9 @@ namespace UnityCore{
                     }else{
                         if(!_on){
                             gameObject.SetActive(false);
+                            isOn = false;
+                        }else{
+                            isOn = true;
                         }
                     }
                 }
@@ -56,7 +70,10 @@ namespace UnityCore{
                     Log("Page ["+type+"] finished transitioning to "+(_on ? "on" : "off"));
 
                     if(!_on){
+                        isOn = false;
                         gameObject.SetActive(false);
+                    }else{
+                        isOn = true;
                     }
 
 

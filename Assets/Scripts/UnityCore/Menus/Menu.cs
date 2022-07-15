@@ -7,7 +7,7 @@ namespace UnityCore{
     namespace Menu{
         public class Menu : MonoBehaviour
         {
-            [SerializeField]private PageController pageController;
+            public PageController pageController;
 
             #if UNITY_EDITOR
                 private void Update() {
